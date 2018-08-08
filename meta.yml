@@ -1,4 +1,4 @@
-article: https://www.bigclown.com/doc/projects/wireless-flood-detector/
+article: https://www.bigclown.com/doc/projects/radio-flood-detector/
 images:
   - title:
     url: https://www.bigclown.com/kits/flood-detector/main.png
@@ -8,4 +8,4 @@ assembly:
   - name: BigClown Sensor Module
   - name: BigClown Mini Battery Module
   - name: BigClown Enclosure BCE501
-  
+
