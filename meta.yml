@@ -1,13 +1,13 @@
 article: https://www.bigclown.com/doc/projects/radio-flood-detector/
 images:
   - title:
-    url: https://www.bigclown.com/kits/flood-detector/main.png
+    url: https://cdn.myshoptet.com/usr/shop.hardwario.com/user/shop/category_portrait/168-2_flood-detector-kit-a1.jpg?5de56e1c
 articles:
   - title: Radio Flood Detector
     url: https://www.hackster.io/jakub-smejkal/radio-flood-detector-a2b67f
     description: Protect your home from the flood with this simple device. It will send you the notification when there is some leak in a bathroom or kitchen
     images:
-      - url: https://hackster.imgix.net/uploads/attachments/925597/_Iz5fAtCAQA.blob?auto=compress%2Cformat&w=900&h=675&fit=min
+      - url: https://hackster.imgix.net/uploads/attachments/1050368/_QTZKPhR77P.blob?auto=compress%2Cformat&w=900&h=675&fit=min
 assembly:
   - name: BigClown Flood Detector
   - name: BigClown Core Module
