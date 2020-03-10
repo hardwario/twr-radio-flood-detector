@@ -1,7 +1,7 @@
 article: https://www.bigclown.com/doc/projects/radio-flood-detector/
 images:
   - title:
-    url: https://cdn.myshoptet.com/usr/shop.hardwario.com/user/shop/category_portrait/168-2_flood-detector-kit-a1.jpg?5de56e1c
+    url: https://github.com/hardwario/website/blob/master/static/kits-images/flood-detector/main.png
 articles:
   - title: Radio Flood Detector
     url: https://www.hackster.io/jakub-smejkal/radio-flood-detector-a2b67f
@@ -9,8 +9,8 @@ articles:
     images:
       - url: https://hackster.imgix.net/uploads/attachments/1050368/_QTZKPhR77P.blob?auto=compress%2Cformat&w=900&h=675&fit=min
 assembly:
-  - name: BigClown Flood Detector
-  - name: BigClown Core Module
-  - name: BigClown Sensor Module
-  - name: BigClown Mini Battery Module
-  - name: BigClown Enclosure BCE501
+  - name: HARDWARIO Flood Detector
+  - name: HARDWARIO Core Module
+  - name: HARDWARIO Sensor Module
+  - name: HARDWARIO Mini Battery Module
+  - name: HARDWARIO Enclosure BCE501
