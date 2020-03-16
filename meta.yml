@@ -1,7 +1,7 @@
-article: https://www.bigclown.com/doc/projects/radio-flood-detector/
+article: https://developers.hardwario.com/projects/radio-flood-detector
 images:
   - title:
-    url: https://github.com/hardwario/website/blob/master/static/kits-images/flood-detector/main.png
+    url: https://raw.githubusercontent.com/hardwario/website/master/static/kits-images/flood-detector/main.png
 articles:
   - title: Radio Flood Detector
     url: https://www.hackster.io/jakub-smejkal/radio-flood-detector-a2b67f
