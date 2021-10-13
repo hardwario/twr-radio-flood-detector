@@ -85,7 +85,6 @@ void flood_detector_event_handler(twr_flood_detector_t *self, twr_flood_detector
 
        if ((is_alarm != param->value) || (param->next_pub < twr_scheduler_get_spin_tick()))
        {
-           twr_led_pulse(&led, 500);
            twr_radio_pub_bool("flood-detector/a/alarm", &is_alarm);
 
            param->value = is_alarm;
