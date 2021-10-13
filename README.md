@@ -2,7 +2,7 @@
 
 # Firmware for HARDWARIO Radio Flood Detector
 
-[![Travis](https://img.shields.io/travis/bigclownlabs/bcf-radio-flood-detector/master.svg)](https://travis-ci.org/bigclownlabs/bcf-radio-flood-detector)
+[![build](https://github.com/hardwario/twr-radio-flood-detector/actions/workflows/main.yml/badge.svg)](https://github.com/hardwario/twr-radio-flood-detector/actions/workflows/main.yml)
 [![Release](https://img.shields.io/github/release/bigclownlabs/bcf-radio-flood-detector.svg)](https://github.com/bigclownlabs/bcf-radio-flood-detector/releases)
 [![License](https://img.shields.io/github/license/bigclownlabs/bcf-radio-flood-detector.svg)](https://github.com/bigclownlabs/bcf-radio-flood-detector/blob/master/LICENSE)
 [![Twitter](https://img.shields.io/twitter/follow/hardwario_en.svg?style=social&label=Follow)](https://twitter.com/hardwario_en)

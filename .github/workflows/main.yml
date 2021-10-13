@@ -1,0 +1,40 @@
+name: build
+
+on:
+  push:
+    branches: [main, master]
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Python dependencies
+        uses: py-actions/py-dependency-install@v2
+        with:
+          path: "requirements.txt"
+          update-pip: "true"
+          update-setuptools: "false"
+          update-wheel: "false"
+
+      - name: Compile
+        run: pio run -e release
+
+      - name: Set env
+        if: ${{ github.event_name == 'release' }}
+        run: |
+          echo "GITHUB_TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+          echo "REPOSITORY_NAME=${GITHUB_REPOSITORY##*/}" >> $GITHUB_ENV
+          mv .pio/build/release/firmware.bin ${GITHUB_REPOSITORY##*/}-${GITHUB_REF#refs/*/}.bin
+      
+      - name: Release
+        if: ${{ github.event_name == 'release' }}
+        uses: softprops/action-gh-release@v0.1.5
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          files: ${{ env.REPOSITORY_NAME }}-${{ env.GITHUB_TAG }}.bin
