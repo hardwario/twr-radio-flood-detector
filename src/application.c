@@ -131,7 +131,7 @@ void application_init(void)
     twr_flood_detector_set_event_handler(&flood_detector, flood_detector_event_handler, &flood_detector_event_param);
     twr_flood_detector_set_update_interval(&flood_detector, FLOOD_DETECTOR_UPDATE_SERVICE_INTERVAL);
 
-    twr_radio_pairing_request("flood-detector", VERSION);
+    twr_radio_pairing_request("flood-detector", FW_VERSION);
 
     twr_scheduler_register(switch_to_normal_mode_task, NULL, SERVICE_INTERVAL_INTERVAL);
 
