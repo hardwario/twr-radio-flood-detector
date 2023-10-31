@@ -1,3 +1,9 @@
+/*
+Flood Detector Firmware
+
+You can uncomment parts of the code to add up to 3 flood detectors to the firmware.
+*/
+
 #include <application.h>
 
 #define SERVICE_INTERVAL_INTERVAL (60 * 60 * 1000)
@@ -9,9 +15,9 @@
 
 #define FLOOD_DETECTOR_NO_CHANGE_INTEVAL (15 * 60 * 1000)
 #define FLOOD_DETECTOR_UPDATE_SERVICE_INTERVAL (1 * 1000)
-#define FLOOD_DETECTOR_UPDATE_NORMAL_INTERVAL  (5 * 1000)
+#define FLOOD_DETECTOR_UPDATE_NORMAL_INTERVAL (5 * 1000)
 
-#define RADIO_FLOOD_DETECTOR        0x0d
+#define RADIO_FLOOD_DETECTOR 0x0d
 
 // LED instance
 twr_led_t led;
@@ -21,16 +27,22 @@ twr_button_t button;
 
 // Thermometer instance
 twr_tmp112_t tmp112;
-static event_param_t temperature_event_param = { .next_pub = 0 };
+static event_param_t temperature_event_param = {.next_pub = 0};
 
 // Flood detector instance
 twr_flood_detector_t flood_detector;
-event_param_t flood_detector_event_param = { .next_pub = 0 };
+event_param_t flood_detector_event_param = {.next_pub = 0};
+
+/*twr_flood_detector_t flood_detector_b;
+event_param_t flood_detector_b_event_param = {.next_pub = 0};*/
+
+/*twr_flood_detector_t flood_detector_c;
+event_param_t flood_detector_c_event_param = {.next_pub = 0};*/
 
 void button_event_handler(twr_button_t *self, twr_button_event_t event, void *event_param)
 {
-    (void) self;
-    (void) event_param;
+    (void)self;
+    (void)event_param;
 
     if (event == TWR_BUTTON_EVENT_PRESS)
     {
@@ -40,7 +52,7 @@ void button_event_handler(twr_button_t *self, twr_button_event_t event, void *ev
 
 void battery_event_handler(twr_module_battery_event_t event, void *event_param)
 {
-    (void) event_param;
+    (void)event_param;
 
     float voltage;
 
@@ -78,19 +90,45 @@ void flood_detector_event_handler(twr_flood_detector_t *self, twr_flood_detector
     bool is_alarm;
     event_param_t *param = (event_param_t *)event_param;
 
-
-    if (event == TWR_FLOOD_DETECTOR_EVENT_UPDATE)
+    if (event == TWR_FLOOD_DETECTOR_EVENT_UPDATE && self == &flood_detector)
     {
-       is_alarm = twr_flood_detector_is_alarm(self);
+        is_alarm = twr_flood_detector_is_alarm(self);
 
-       if ((is_alarm != param->value) || (param->next_pub < twr_scheduler_get_spin_tick()))
-       {
-           twr_radio_pub_bool("flood-detector/a/alarm", &is_alarm);
+        if ((is_alarm != param->value) || (param->next_pub < twr_scheduler_get_spin_tick()))
+        {
+            twr_log_debug("APP: Flood detector A alarm: %d", is_alarm);
+            twr_radio_pub_bool("flood-detector/a/alarm", &is_alarm);
 
-           param->value = is_alarm;
-           param->next_pub = twr_scheduler_get_spin_tick() + FLOOD_DETECTOR_NO_CHANGE_INTEVAL;
-       }
+            param->value = is_alarm;
+            param->next_pub = twr_scheduler_get_spin_tick() + FLOOD_DETECTOR_NO_CHANGE_INTEVAL;
+        }
     }
+    /*else if (event == TWR_FLOOD_DETECTOR_EVENT_UPDATE && self == &flood_detector_b)
+    {
+        is_alarm = twr_flood_detector_is_alarm(self);
+
+        if ((is_alarm != param->value) || (param->next_pub < twr_scheduler_get_spin_tick()))
+        {
+            twr_log_debug("APP: Flood detector B alarm: %d", is_alarm);
+            twr_radio_pub_bool("flood-detector/b/alarm", &is_alarm);
+
+            param->value = is_alarm;
+            param->next_pub = twr_scheduler_get_spin_tick() + FLOOD_DETECTOR_NO_CHANGE_INTEVAL;
+        }
+    }*/
+    /*else if (event == TWR_FLOOD_DETECTOR_EVENT_UPDATE && self == &flood_detector_c)
+    {
+        is_alarm = twr_flood_detector_is_alarm(self);
+
+        if ((is_alarm != param->value) || (param->next_pub < twr_scheduler_get_spin_tick()))
+        {
+            twr_log_debug("APP: Flood detector C alarm: %d", is_alarm);
+            twr_radio_pub_bool("flood-detector/c/alarm", &is_alarm);
+
+            param->value = is_alarm;
+            param->next_pub = twr_scheduler_get_spin_tick() + FLOOD_DETECTOR_NO_CHANGE_INTEVAL;
+        }
+    }*/
 }
 
 void switch_to_normal_mode_task(void *param)
@@ -98,6 +136,8 @@ void switch_to_normal_mode_task(void *param)
     twr_tmp112_set_update_interval(&tmp112, TEMPERATURE_UPDATE_NORMAL_INTERVAL);
 
     twr_flood_detector_set_update_interval(&flood_detector, FLOOD_DETECTOR_UPDATE_NORMAL_INTERVAL);
+    // twr_flood_detector_set_update_interval(&flood_detector_b, FLOOD_DETECTOR_UPDATE_NORMAL_INTERVAL);
+    // twr_flood_detector_set_update_interval(&flood_detector_c, FLOOD_DETECTOR_UPDATE_NORMAL_INTERVAL);
 
     twr_scheduler_unregister(twr_scheduler_get_current_task_id());
 }
@@ -107,6 +147,8 @@ void application_init(void)
     // Initialize LED
     twr_led_init(&led, TWR_GPIO_LED, false, false);
     twr_led_set_mode(&led, TWR_LED_MODE_OFF);
+
+    twr_log_init(TWR_LOG_LEVEL_DEBUG, TWR_LOG_TIMESTAMP_ABS);
 
     twr_radio_init(TWR_RADIO_MODE_NODE_SLEEPING);
 
@@ -126,10 +168,26 @@ void application_init(void)
     twr_tmp112_set_event_handler(&tmp112, tmp112_event_handler, &temperature_event_param);
     twr_tmp112_set_update_interval(&tmp112, TEMPERATURE_UPDATE_SERVICE_INTERVAL);
 
-    // Initialize flood detector
+    // Initialize flood detector on sensor module chanel A
     twr_flood_detector_init(&flood_detector, TWR_FLOOD_DETECTOR_TYPE_LD_81_SENSOR_MODULE_CHANNEL_A);
     twr_flood_detector_set_event_handler(&flood_detector, flood_detector_event_handler, &flood_detector_event_param);
     twr_flood_detector_set_update_interval(&flood_detector, FLOOD_DETECTOR_UPDATE_SERVICE_INTERVAL);
+
+    // Initialize flood detector on sensor module chanel B
+    /*
+    twr_flood_detector_init(&flood_detector_b, TWR_FLOOD_DETECTOR_TYPE_LD_81_SENSOR_MODULE_CHANNEL_B);
+    twr_flood_detector_set_event_handler(&flood_detector_b, flood_detector_event_handler, &flood_detector_b_event_param);
+    twr_flood_detector_set_update_interval(&flood_detector_b, FLOOD_DETECTOR_UPDATE_SERVICE_INTERVAL);
+    */
+
+    // Initialize flood detector on sensor module chanel C
+    // This will also connect the VDD to the sensor module
+    // You need to connect a 4.7k ohm resistor between VDD and sensor module channel C (included with Jablotron Flood Sensor)
+    /*
+    twr_flood_detector_init(&flood_detector_c, TWR_FLOOD_DETECTOR_TYPE_LD_81_SENSOR_MODULE_CHANNEL_C);
+    twr_flood_detector_set_event_handler(&flood_detector_c, flood_detector_event_handler, &flood_detector_c_event_param);
+    twr_flood_detector_set_update_interval(&flood_detector_c, FLOOD_DETECTOR_UPDATE_SERVICE_INTERVAL);
+    */
 
     twr_radio_pairing_request("flood-detector", FW_VERSION);
 
